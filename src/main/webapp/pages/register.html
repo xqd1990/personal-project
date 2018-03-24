@@ -5,8 +5,13 @@
 	    <meta charset="UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>Register</title>
+		<!-- below two are the css for bootstrap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<!-- below is datepicker css for bootstrap -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+		<!-- below is validation css for jquery -->
+		<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
 	</head>
 	
 	<body>
@@ -16,29 +21,52 @@
 				<img src="http://localhost:8080/pp/images/twitter_logo2.jpg" style="width:100%;height:180px">
 			</div>
 			<div class="col-sm-4 col-sm-offset-4" style="margin-top:30px">
-				<form action="http://localhost:8080/pp/user/register" method="post" class="form-horizontal col-sm-8 col-sm-offset-2">
-					<div class="form-group">
-						<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-						<input name="email" placeholder="email"/>
-					</div>
+				<form id="reg_form" action="http://localhost:8080/pp/user/register" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
 					<div class="form-group">
 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 						<input name="name" placeholder="Firstname Lastname"/>
 					</div>
 					<div class="form-group">
-						<input type="radio" name="gender" value="1"> &nbsp;Male&nbsp;
+						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+						<input id="birth" name="birth" placeholder="birthday" readonly/>
+					</div>
+					<div class="form-group">
+						<span class="glyphicon glyphicon-ruble" aria-hidden="true"></span>
+						<input type="radio" name="gender" value="1" checked> &nbsp;Male&nbsp;
 						<input type="radio" name="gender" value="0"> &nbsp;Female
 					</div>
 					<div class="form-group">
+						<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+						<input name="email" placeholder="email"/>
+					</div>
+					<div class="form-group">
+						<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+						<input name="pwd" placeholder="password"/>
+					</div>
+					<div class="form-group">
 						<span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
-						<span class="input-group-addon" id="tel-addon">+44</span><input name="tel" aria-describedby="tel-addon"/>
+						<input name="tel" placeholder="+44 0775 xxxxxxx"/>
+					</div>
+					<div class="form-group">
+						<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+						<input name="postcode" placeholder="Postcode"/>
+					</div>
+					<div class="btn-group btn-group-sm" role="group">
+						<button id="submit" type="button" class="btn btn-success btn">Register</button>
+						<button id="cancel" type="button" class="btn btn-default">Cancel</button>
 					</div>
 				</form>
 			</div>
 		</div>
-		
+		<!-- below is js for jquery -->
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<!-- below two are validation js for jquery -->
+		<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+		<!-- below is js for bootstrap -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		<script src="js/index.js"></script>
+		<!-- below is datepicker js for bootstrap -->
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+		<script src="http://localhost:8080/pp/js/register.js"></script>
 	</body>
 </html>

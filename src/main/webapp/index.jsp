@@ -21,11 +21,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		<div class="container" style="margin-top:50px">
 			<div class="col-sm-4 col-sm-offset-4">
-				<img src="images/twitter_logo1.jpg">
+				<img src="images/twitter_logo1.jpg" style="width:100%;height:280px">
 			</div>
 			<br>
 			<div class="col-sm-4 col-sm-offset-4">
-			<form action="user/login" method="post" class="form-horizontal col-sm-8 col-sm-offset-2">	
+			<form action="user/login" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">	
 				<div class="form-group">
 					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 					<input name="email" placeholder="email" />
