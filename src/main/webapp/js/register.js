@@ -1,6 +1,6 @@
 $(function(){
 	$("#birth").datepicker({
-		format:"dd/mm/yyyy"
+		format:"yyyy-mm-dd"
 	});
 	$("#cancel").click(function(){
 		window.history.back();

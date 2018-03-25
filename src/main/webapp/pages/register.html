@@ -2,6 +2,7 @@
 <html>
 
   	<head>
+  		<base href="http://localhost:8080/pp/">
 	    <meta charset="UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>Register</title>
@@ -16,47 +17,69 @@
 	
 	<body>
 		
-		<div class="container" style="margin-top:30px">
-			<div class="col-sm-4 col-sm-offset-4">
-				<img src="http://localhost:8080/pp/images/twitter_logo2.jpg" style="width:100%;height:180px">
+		<div class="container" style="margin-top:30px;width:100%">
+			<!-- 
+			<div class="col-sm-6 col-sm-offset-3">
+				<img class="img-responsive" src="images/twitter_logo2.jpg">
 			</div>
-			<div class="col-sm-4 col-sm-offset-4" style="margin-top:30px">
-				<form id="reg_form" action="http://localhost:8080/pp/user/register" method="post" style="width:100%" class="form-horizontal col-sm-6 col-sm-offset-3">
-					<div class="form-group">
-						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-						<input name="name" placeholder="Firstname Lastname"/>
+			 -->
+			<form id="reg_form" action="user/register" class="form-horizontal col-sm-6 col-sm-offset-3" role="form" method="post" style="margin-top:30px">
+				<div class="form-group">
+					<label for="firstname" class="col-sm-2 control-label">Given name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="firstname" placeholder="Firstname" id="firstname">
 					</div>
-					<div class="form-group">
-						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-						<input id="birth" name="birth" placeholder="birthday" readonly/>
+				</div>
+				<div class="form-group">
+					<label for="lastname" class="col-sm-2 control-label">Surname</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="lastname" placeholder="Lastname" id="lastname">
 					</div>
-					<div class="form-group">
-						<span class="glyphicon glyphicon-ruble" aria-hidden="true"></span>
-						<input type="radio" name="gender" value="1" checked> &nbsp;Male&nbsp;
-						<input type="radio" name="gender" value="0"> &nbsp;Female
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Gender</label>
+					<div class="col-sm-10">
+						<label class="radio-inline"><input type="radio" name="gender" value="1" checked>Male</label>
+						<label class="radio-inline"><input type="radio" name="gender" value="0">Female</label>
 					</div>
-					<div class="form-group">
-						<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-						<input name="email" placeholder="email"/>
+				</div>
+				<div class="form-group">
+					<label for="birth" class="col-sm-2 control-label">Birthday</label>
+					<div class="col-sm-10">
+						<input type="text" name="birth" class="form-control" placeholder="Birthday" id="birth">
 					</div>
-					<div class="form-group">
-						<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-						<input name="pwd" placeholder="password"/>
+				</div>
+				<div class="form-group">
+					<label for="email" class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="email" placeholder="123@example.com" id="email">
 					</div>
-					<div class="form-group">
-						<span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
-						<input name="tel" placeholder="+44 0775 xxxxxxx"/>
+				</div>
+				<div class="form-group">
+					<label for="tel" class="col-sm-2 control-label">Tel</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="tel" placeholder="+44 0116 252 5381" id="tel">
 					</div>
-					<div class="form-group">
-						<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-						<input name="postcode" placeholder="Postcode"/>
+				</div>
+				<div class="form-group">
+					<label for="password" class="col-sm-2 control-label">Password</label>
+					<div class="col-sm-10">
+						<input type="password" class="form-control" name="pwd" placeholder="Password" id="password">
 					</div>
-					<div class="btn-group btn-group-sm" role="group">
-						<button id="submit" type="button" class="btn btn-success btn">Register</button>
-						<button id="cancel" type="button" class="btn btn-default">Cancel</button>
+				</div>
+				<div class="form-group">
+					<label for="postcode" class="col-sm-2 control-label">Postcode</label>
+					<div class="col-sm-10">
+						<input type="text" name="postcode" class="form-control" placeholder="LE1 7RH" id="postcode">
 					</div>
-				</form>
-			</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-10 col-sm-offset-2">
+						<button type="submit" class="btn btn-success">Register</button>
+						<button type="button" id="cancel" class="btn btn-default">Cancel</button>
+					</div>
+				</div>
+			</form>
 		</div>
 		<!-- below is js for jquery -->
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
