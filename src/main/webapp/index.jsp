@@ -25,7 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 			<br>
 			<div class="col-sm-4 col-sm-offset-4">
-			<form action="user/login" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">	
+			<form action="user/login" method="post" style="width:100%" class="form-horizontal col-sm-6 col-sm-offset-3">	
 				<div class="form-group">
 					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 					<input name="email" placeholder="email" />
