@@ -45,9 +45,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	</ul>
 			    	<c:if test="${empty user}">
 			    	<form action="user/login" method="post" class="navbar-form navbar-right">
+			    		<c:if test="${not empty error}"><span class="label label-danger">${error}</span></c:if>
 				        <div class="form-group">
-				        	<input type="text" name="email" class="form-control" placeholder="email">
-				        	<input type="password" name="pwd" class="form-control" placeholder="password">
+				        	<input type="text" name="email" class="form-control input-sm" placeholder="email">
+				        	<input type="password" name="pwd" class="form-control input-sm" placeholder="password">
 				        </div>
 				        <button type="submit" class="btn btn-success btn-sm">Log in</button>
 				        <button type="button" id="register" class="btn btn-default btn-sm">Register</button>
@@ -55,8 +56,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       				</c:if>
       				<c:if test="${not empty user}">
       				<ul class="nav navbar-nav navbar-right">
-      					<li>${user.name}</li>
-      					<li><button id="logout" class="btn btn-default">Log out</button></li>
+      					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>&nbsp;${user.firstname}<span class="caret"></span></a>
+      						<ul class="dropdown-menu">
+      							<li>
+                					<a href="user/logout">Log out</a></li>
+            					<li>
+      						</ul>
+      					</li>
       				</ul>
       				</c:if>
 			    </div>

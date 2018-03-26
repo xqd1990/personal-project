@@ -1,15 +1,45 @@
 $(function(){
 	$("#birth").datepicker({
-		format:"yyyy-mm-dd"
+		format:"yyyy-mm-dd",
+		autoclose:true
 	});
 	$("#cancel").click(function(){
 		window.history.back();
 	});
 	$("#reg_form").validate({
 		rules:{
-			name:{
+			firstname:{
+				required:true
+			},
+			lastname:{
+				required:true
+			},
+			birth:{
+				required:true
+			},
+			email:{
+				required:true,
+				email:true
+			},
+			tel:{
+				required:true,
+			},
+			pwd:{
+				required:true
+			},
+			pwdConf:{
+				required:true,
+				equalTo:"#pwd"
+			},
+			postcode:{
 				required:true
 			}
-		}
+		},
+		messages:{
+			pwdConf:{
+				equalTo:"please enter the same password!"
+			}
+		},
+		success:"valid"
 	});
 });
