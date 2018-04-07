@@ -52,4 +52,6 @@ public class UserController {
 		req.getSession().removeAttribute("user");
 		return "redirect:/index.jsp";
 	}
+	
+	
 }

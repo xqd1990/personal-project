@@ -18,74 +18,77 @@
 	<body>
 		
 		<div class="container" style="margin-top:30px;width:100%">
-			<!-- 
-			<div class="col-sm-6 col-sm-offset-3">
-				<img class="img-responsive" src="images/twitter_logo2.jpg">
+			<div class="panel panel-primary" style="width:50%;margin-left:25%">
+				<div class="panel-heading">
+        			<h3 class="panel-title">Register</h3>
+    			</div>
+    			<div class="panel-body">
+					<form id="reg_form" action="user/register" class="form-horizontal col-sm-8 col-sm-offset-2" role="form" method="post" style="margin-top:30px">
+						<div class="form-group">
+							<label for="firstname" class="col-sm-2 control-label">Given name</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="firstname" placeholder="Firstname" id="firstname">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastname" class="col-sm-2 control-label">Surname</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="lastname" placeholder="Lastname" id="lastname">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Gender</label>
+							<div class="col-sm-10">
+								<label class="radio-inline"><input type="radio" name="gender" value=1 checked>Male</label>
+								<label class="radio-inline"><input type="radio" name="gender" value=0>Female</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="birth" class="col-sm-2 control-label">Birthday</label>
+							<div class="col-sm-10">
+								<input type="text" name="birth" class="form-control" placeholder="Birthday" id="birth">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="email" class="col-sm-2 control-label">Email</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="email" placeholder="123@example.com" id="email">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="tel" class="col-sm-2 control-label">Tel</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="tel" placeholder="+44 0116 252 5381" id="tel">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="pwd" class="col-sm-2 control-label">Password</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" name="pwd" placeholder="Password" id="pwd">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="pwdConf" class="col-sm-2 control-label">Password Again</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" name="pwdConf" placeholder="Password" id="pwdConf">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="postcode" class="col-sm-2 control-label">Postcode</label>
+							<div class="col-sm-10">
+								<input type="text" name="postcode" class="form-control" placeholder="LE1 7RH" id="postcode">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-10 col-sm-offset-2">
+								<button type="submit" class="btn btn-success">Register</button>
+								<button type="button" id="cancel" class="btn btn-default">Cancel</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			
 			</div>
-			 -->
-			<form id="reg_form" action="user/register" class="form-horizontal col-sm-6 col-sm-offset-3" role="form" method="post" style="margin-top:30px">
-				<div class="form-group">
-					<label for="firstname" class="col-sm-2 control-label">Given name</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" name="firstname" placeholder="Firstname" id="firstname">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="lastname" class="col-sm-2 control-label">Surname</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" name="lastname" placeholder="Lastname" id="lastname">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">Gender</label>
-					<div class="col-sm-10">
-						<label class="radio-inline"><input type="radio" name="gender" value=1 checked>Male</label>
-						<label class="radio-inline"><input type="radio" name="gender" value=0>Female</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="birth" class="col-sm-2 control-label">Birthday</label>
-					<div class="col-sm-10">
-						<input type="text" name="birth" class="form-control" placeholder="Birthday" id="birth">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="email" class="col-sm-2 control-label">Email</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" name="email" placeholder="123@example.com" id="email">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="tel" class="col-sm-2 control-label">Tel</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" name="tel" placeholder="+44 0116 252 5381" id="tel">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="pwd" class="col-sm-2 control-label">Password</label>
-					<div class="col-sm-10">
-						<input type="password" class="form-control" name="pwd" placeholder="Password" id="pwd">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="pwdConf" class="col-sm-2 control-label">Password Again</label>
-					<div class="col-sm-10">
-						<input type="password" class="form-control" name="pwdConf" placeholder="Password" id="pwdConf">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="postcode" class="col-sm-2 control-label">Postcode</label>
-					<div class="col-sm-10">
-						<input type="text" name="postcode" class="form-control" placeholder="LE1 7RH" id="postcode">
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-10 col-sm-offset-2">
-						<button type="submit" class="btn btn-success">Register</button>
-						<button type="button" id="cancel" class="btn btn-default">Cancel</button>
-					</div>
-				</div>
-			</form>
 		</div>
 		<!-- below is js for jquery -->
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

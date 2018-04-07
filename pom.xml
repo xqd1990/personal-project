@@ -17,6 +17,23 @@
   
   <dependencies>
   
+  	<dependency>
+    	<groupId>org.twitter4j</groupId>
+    	<artifactId>twitter4j-core</artifactId>
+    	<version>4.0.3</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.twitter4j</groupId>
+	    <artifactId>twitter4j-stream</artifactId>
+	    <version>4.0.3</version>
+	</dependency>
+	
+	<dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver</artifactId>
+        <version>3.6.3</version>
+    </dependency>
+  
   	<!-- some dependencies about servlet -->
   	<dependency>
     	<groupId>javax.servlet</groupId>

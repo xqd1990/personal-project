@@ -2,4 +2,36 @@ $(function(){
 	$("#register").click(function(){
 		window.location.href="pages/register.html";
 	});
+	$("#start").datepicker({
+		format:"yyyy-mm-dd",
+		autoclose:true
+	});
+	$("#end").datepicker({
+		format:"yyyy-mm-dd",
+		autoclose:true
+	});
+	$("#search").click(function(){
+		var params = {
+			keywords:$("#keywords").val(),
+			hashtags:$("#hashtags").val(),
+			screenname:$("#screenname").val(),
+			start:$("#start").val(),
+			end:$("#end").val()
+		};
+		$.ajax({
+			type:"post",
+			url:"tweets/search",
+			data:params,
+			success:function(data){
+				alert(data);
+			}
+		});
+	});
+	$("#download").click(function(){
+		if(document.getElementById("login_form")){
+			$("#info_title").text("Warning:");
+			$("#info_content").text("Please Login First!");
+			$("#info_modal").modal();
+		}
+	});
 });

@@ -15,6 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<title>TwitterData</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 	</head>
 	
 	<body>
@@ -33,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    <div class="collapse navbar-collapse" id="links">
 			    	<ul class="nav navbar-nav">
 			    		<li><a href="https://twitter.com">Twitter</a></li>
-			    		<li><a href="#">Link</a></li>
+			    		<li><a href="https://apps.twitter.com/">Dev</a></li>
 			    		<li class="dropdown">
 			    			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sets <span class="caret"></span></a>
           					<ul class="dropdown-menu">
@@ -44,7 +45,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    		</li>
 			    	</ul>
 			    	<c:if test="${empty user}">
-			    	<form action="user/login" method="post" class="navbar-form navbar-right">
+			    	<form id="login_form" action="user/login" method="post" class="navbar-form navbar-right">
 			    		<c:if test="${not empty error}"><span class="label label-danger">${error}</span></c:if>
 				        <div class="form-group">
 				        	<input type="text" name="email" class="form-control input-sm" placeholder="email">
@@ -69,10 +70,99 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		</nav>
 		
+		<div class="container" style="margin-top:30px;width:100%">
+			<div class="col-sm-6">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+		        		Searching Conditions
+		    		</div>
+					<div class="panel-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="keywords" class="col-sm-2 control-label">Keywords</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="keywords" placeholder="word1 word2 ..." id="keywords">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="hashtags" class="col-sm-2 control-label">Hashtags</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="hashtags" placeholder="hashtag1 hashtag2 ..." id="hashtags">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="screenname" class="col-sm-2 control-label">Screenname</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="screenname" placeholder="e.g. uniofleicester" id="screenname">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="start" class="col-sm-2 control-label">Start Time</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="start" placeholder="start time" id="start">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="end" class="col-sm-2 control-label">End Time</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="end" placeholder="end time" id="end">
+								</div>
+							</div>
+							<button type="button" id="search" class="btn btn-success">Search</button>
+						</form>
+					</div>
+				</div>
+				
+				<div class="panel panel-success">
+		    		<div class="panel-heading">
+						Prediction Result
+					</div>
+					<div class="panel-body">
+					
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						Searching Result
+					</div>
+					<div class="panel-body">
+						Here is the Result Area
+					</div>			
+					<div class="panel-footer">
+						<div class="btn-group btn-group-xs col-sm-offset-5">
+							<button type="button" class="btn btn-default">&laquo;</button>
+    						<button type="button" class="btn btn-default" disabled><span id="current_page">0</span>/<span id="total_page">0</span></button>
+    						<button type="button" class="btn btn-default" disabled>Total <span id="total">0</span></button>
+    						<button type="button" class="btn btn-default">&raquo;</button>
+    						<button type="button" class="btn btn-success" id="download">download</button>
+						</div>
+					</div>		
+				</div>
+			</div>
+		</div>
 		
-		
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<!-- alert modal -->
+		<div class="modal fade" id="info_modal" tabindex="-1" role="dialog" aria-labelledby="info_title">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h5 class="modal-title" id="info_title"></h5>
+					</div>
+					<div class="modal-body" id="info_content">
+					
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 		<script src="js/index.js"></script>
 	</body>
 </html>

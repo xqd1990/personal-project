@@ -4,6 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterStream;
 
 @Entity
 public class User {
@@ -71,5 +75,21 @@ public class User {
 	}
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+	private Twitter twitter;
+	private TwitterStream ts;
+	@Transient
+	public Twitter getTwitter() {
+		return twitter;
+	}
+	public void setTwitter(Twitter twitter) {
+		this.twitter = twitter;
+	}
+	@Transient
+	public TwitterStream getTs() {
+		return ts;
+	}
+	public void setTs(TwitterStream ts) {
+		this.ts = ts;
 	}
 }
