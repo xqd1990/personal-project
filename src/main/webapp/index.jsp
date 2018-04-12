@@ -36,11 +36,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    		<li><a href="https://twitter.com">Twitter</a></li>
 			    		<li><a href="https://apps.twitter.com/">Dev</a></li>
 			    		<li class="dropdown">
-			    			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sets <span class="caret"></span></a>
+			    			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">FQ <span class="caret"></span></a>
           					<ul class="dropdown-menu">
-          						<li><a href="user/change">Change Settings</a></li>
+          						<li><a href="#">About Us</a></li>
           						<li role="separator" class="divider"></li>
-          						<li><a href="user/getback">Forget Password</a></li>
+          						<li><a href="pages/getback.html">Forget Password</a></li>
           					</ul>
 			    		</li>
 			    	</ul>
@@ -60,8 +60,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>&nbsp;${user.firstname}<span class="caret"></span></a>
       						<ul class="dropdown-menu">
       							<li>
+                					<a href="user/mysettings">My Settings</a></li>
+            					<li>
+      							<li role="separator" class="divider"></li>
+            					<li>
+                					<a href="user/mydownloads">My Downloads</a></li>
+            					<li>
+            					<li role="separator" class="divider"></li>
+      							<li>
                 					<a href="user/logout">Log out</a></li>
             					<li>
+            					
       						</ul>
       					</li>
       				</ul>
@@ -77,19 +86,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        		Searching Conditions
 		    		</div>
 					<div class="panel-body">
-						<form class="form-horizontal" role="form">
+						<form class="form-horizontal" id="search_form" role="form">
 							<div class="form-group">
-								<label for="keywords" class="col-sm-2 control-label">Keywords</label>
+								<label for="keyword" class="col-sm-2 control-label">Keyword</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" name="keywords" placeholder="word1 word2 ..." id="keywords">
+									<input type="text" class="form-control" name="keyword" placeholder="keyword" id="keyword">
 								</div>
 							</div>
+							<!-- 
 							<div class="form-group">
-								<label for="hashtags" class="col-sm-2 control-label">Hashtags</label>
+								<label for="hashtag" class="col-sm-2 control-label">Hashtag</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" name="hashtags" placeholder="hashtag1 hashtag2 ..." id="hashtags">
+									<input type="text" class="form-control" name="hashtag" placeholder="hashtag" id="hashtag">
 								</div>
 							</div>
+							 -->
 							<div class="form-group">
 								<label for="screenname" class="col-sm-2 control-label">Screenname</label>
 								<div class="col-sm-10">
@@ -113,14 +124,50 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 				</div>
 				
-				<div class="panel panel-success">
-		    		<div class="panel-heading">
-						Prediction Result
-					</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+		        		Tracking Conditions
+		    		</div>
 					<div class="panel-body">
-					
+						<form class="form-horizontal" id="track_form" role="form" action="tweets/secret/track" method="post">
+							<div class="form-group">
+								<label for="keywords" class="col-sm-2 control-label">Keywords</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="keywords" placeholder="word1 word2 ..." id="keywords">
+								</div>
+							</div>
+							<!-- 
+							<div class="form-group">
+								<label for="hashtags" class="col-sm-2 control-label">Hashtags</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="hashtags" placeholder="hashtag1 hashtag2 ..." id="hashtags">
+								</div>
+							</div>
+							 -->
+							<div class="form-group">
+								<label for="sn" class="col-sm-2 control-label">Screenname</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="sn" placeholder="e.g. uniofleicester" id="sn">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="hour" class="col-sm-2 control-label">Hour</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="hour" id="hour"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option></select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="count" class="col-sm-2 control-label">Count</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="count" placeholder="e.g. 1000" id="count">
+								</div>
+							</div>
+							<button type="button" id="track" class="btn btn-success">Track</button>
+							<button type="button" id="stop" class="btn btn-danger">Stop</button>
+						</form>
 					</div>
 				</div>
+				
 			</div>
 			<div class="col-sm-6">
 				<div class="panel panel-primary">
@@ -128,17 +175,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						Searching Result
 					</div>
 					<div class="panel-body">
-						Here is the Result Area
+						<table class="table table-striped table-bordered">
+							<caption>See Result Here</caption>
+							<thead>
+							    <tr>
+							      <th>User</th>
+							      <th>Text</th>
+							      <th>Time</th>
+							      <th>Retweeted</th>
+							      <th>Favorited</th>
+							    </tr>
+							</thead>
+							<tbody id="table_content">
+								
+							</tbody>
+						</table>
 					</div>			
 					<div class="panel-footer">
 						<div class="btn-group btn-group-xs col-sm-offset-5">
-							<button type="button" class="btn btn-default">&laquo;</button>
-    						<button type="button" class="btn btn-default" disabled><span id="current_page">0</span>/<span id="total_page">0</span></button>
-    						<button type="button" class="btn btn-default" disabled>Total <span id="total">0</span></button>
-    						<button type="button" class="btn btn-default">&raquo;</button>
-    						<button type="button" class="btn btn-success" id="download">download</button>
+							<button type="button" class="btn btn-default" id="last_page">&laquo;</button>
+    						<button type="button" class="btn btn-default" disabled>&nbsp;&nbsp;&nbsp;</button>
+    						<button type="button" class="btn btn-default" id="next_page">&raquo;</button>
 						</div>
 					</div>		
+				</div>
+				
+				<div class="panel panel-success">
+		    		<div class="panel-heading">
+						Prediction Result
+					</div>
+					<div class="panel-body">
+					
+					</div>
 				</div>
 			</div>
 		</div>

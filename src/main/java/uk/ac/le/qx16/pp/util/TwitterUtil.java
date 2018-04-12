@@ -6,8 +6,12 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import twitter4j.ConnectionLifeCycleListener;
 import twitter4j.FilterQuery;
+import twitter4j.Paging;
 import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.ResponseList;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -28,13 +32,10 @@ public final class TwitterUtil {
 	private static final String CONSUMER_SECRET = "A3tr5wmsMmx7mPxLkijkIo3p5sPNblNLglxkPLFggJAtIGlA0m";
 	private static final String ACCESS_TOKEN = "840574781737037827-JOFKY336HBkmdhJIti1AoawNIX1nbjV";
 	private static final String ACCESS_TOKEN_SECRET = "TX9TneFiW1ehEJcr7maZ1Kp7tw4fF4wji4tu1GSVG5VVb";
-	private static final TwitterFactory tf;
-	private static final TwitterStreamFactory tsf;
+	private static final TwitterFactory tf = new TwitterFactory();
+	private static final TwitterStreamFactory tsf = new TwitterStreamFactory();
 	private static final MongoClient MONGOCLIENT = new MongoClient();
-	static {
-		tf = new TwitterFactory();
-		tsf = new TwitterStreamFactory();
-	}
+	
 	/**
 	 * 
 	 * @return Local Twitter instance
@@ -55,6 +56,10 @@ public final class TwitterUtil {
 		twitter.setOAuthConsumer(consumer_key, consumer_secret);
 		twitter.setOAuthAccessToken(new AccessToken(access_token, access_token_secret));
 		return twitter;
+	}
+	
+	public static Long screennameToId(String screenname) throws TwitterException{
+		return getLocalTwitter().showUser(screenname).getId();
 	}
 	/**
 	 * 
@@ -85,7 +90,9 @@ public final class TwitterUtil {
 		return MONGOCLIENT.getDatabase("twitter");
 	}
 	
+	static Status test_status;
 	public static void main(String[] args) throws TwitterException{
+		final TwitterStream ts = getLocalTwitterStream();
 		StatusListener statusListener = new StatusListener() {
 			
 			public void onException(Exception arg0) {
@@ -100,9 +107,11 @@ public final class TwitterUtil {
 			
 			public void onStatus(Status arg0) {
 				// TODO Auto-generated method stub
-				User user = arg0.getUser();
-				if(!arg0.getLang().equals("en"))
-					return;
+				System.out.println(arg0.getText());
+				test_status = arg0;
+				if(arg0.getText().contains("test"))
+					ts.cleanUp();
+				/*
 				MongoDatabase md = getDB();
 				MongoCollection<Document> col = md.getCollection("tweets");
 				Document user_doc = new Document("_id", user.getId()).
@@ -113,14 +122,17 @@ public final class TwitterUtil {
 										append("followersCount", user.getFollowersCount()).
 										append("favoritesCount", user.getFavouritesCount()).
 										append("friendsCount", user.getFriendsCount()).
-										append("statusesCount", user.getStatusesCount());
+										append("statusesCount", user.getStatusesCount()).
+										append("profileImageURLHttps", user.getProfileImageURLHttps());
 				Document status_doc = new Document("_id", arg0.getId()).
 										append("createdAt", arg0.getCreatedAt().toString()).
 										append("text", arg0.getText()).
+										append("isRetweet", arg0.isRetweet()).
 										append("favoriteCount", arg0.getFavoriteCount()).
 										append("retweetCount", arg0.getRetweetCount()).
 										append("user", user_doc);
 				col.insertOne(status_doc);
+				*/
 			}
 			
 			public void onStallWarning(StallWarning arg0) {
@@ -138,18 +150,46 @@ public final class TwitterUtil {
 				System.out.println(arg0.toString());
 			}
 		};
-		/*
-		TwitterStream ts = getLocalTwitterStream();
+		
 		ts.addListener(statusListener);
 		FilterQuery query = new FilterQuery();
-		//query.follow(new long[]{840574781737037827L});
-		query.track(new String[] {"bitcoin"});
+		query.language(new String[] {"en"});
+		query.follow(new long[]{840574781737037827L});
+		//query.track(new String[] {"#bitcoin"});
+		//query.count(3);
+		ts.addConnectionLifeCycleListener(new ConnectionLifeCycleListener() {
+			
+			@Override
+			public void onDisconnect() {
+				// TODO Auto-generated method stub
+				System.out.println("Disconnect");
+			}
+			
+			@Override
+			public void onConnect() {
+				// TODO Auto-generated method stub
+				System.out.println("Connect");
+			}
+			
+			@Override
+			public void onCleanUp() {
+				// TODO Auto-generated method stub
+				System.out.println(test_status.getUser().getScreenName());
+				System.out.println("Finished");
+			}
+		});
 		ts.filter(query);
-		*/
-		/*
-		Twitter twitter = getLocalTwitter();
-		Query query = new Query("test");
 		
-		*/
+		/*Twitter twitter = getLocalTwitter();
+		//Query query = new Query().query("#test").lang("en");
+		//QueryResult results = twitter.search(query);
+		ResponseList<Status> results = twitter.getUserTimeline("qx16_xiang", new Paging(1, 5));
+		for(Status status:results){
+			System.out.println(status.getText());
+			System.out.println(status.getCreatedAt().toGMTString());
+			System.out.println(status.getCreatedAt().toString());
+			System.out.println(status.getCreatedAt().toLocaleString());
+			System.out.println("---------------");
+		}*/
 	}
 }

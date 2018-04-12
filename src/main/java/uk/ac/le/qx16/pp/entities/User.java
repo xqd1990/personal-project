@@ -1,9 +1,14 @@
 package uk.ac.le.qx16.pp.entities;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import twitter4j.Twitter;
@@ -14,6 +19,14 @@ public class User {
 	private int id;
 	private String firstname;
 	private String lastname;
+	private List<TrackingRecord> trackingRecords;
+	@OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.REMOVE},mappedBy="user")
+	public List<TrackingRecord> getTrackingRecords() {
+		return trackingRecords;
+	}
+	public void setTrackingRecords(List<TrackingRecord> trackingRecords) {
+		this.trackingRecords = trackingRecords;
+	}
 	public String getFirstname() {
 		return firstname;
 	}
@@ -75,21 +88,5 @@ public class User {
 	}
 	public void setTel(String tel) {
 		this.tel = tel;
-	}
-	private Twitter twitter;
-	private TwitterStream ts;
-	@Transient
-	public Twitter getTwitter() {
-		return twitter;
-	}
-	public void setTwitter(Twitter twitter) {
-		this.twitter = twitter;
-	}
-	@Transient
-	public TwitterStream getTs() {
-		return ts;
-	}
-	public void setTs(TwitterStream ts) {
-		this.ts = ts;
 	}
 }

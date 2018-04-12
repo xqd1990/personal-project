@@ -1,5 +1,7 @@
 package uk.ac.le.qx16.pp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import uk.ac.le.qx16.pp.entities.TrackingRecord;
 import uk.ac.le.qx16.pp.entities.User;
+import uk.ac.le.qx16.pp.repository.TrackingRecordRepository;
+import uk.ac.le.qx16.pp.service.TweetsService;
 import uk.ac.le.qx16.pp.service.UserService;
 
 @Controller
@@ -18,7 +23,9 @@ import uk.ac.le.qx16.pp.service.UserService;
 public class UserController {
 	
 	@Autowired
-	UserService userService;
+	private UserService userService;
+	@Autowired
+	private TweetsService tweetsService;
 	
 	@RequestMapping(value="/login")
 	public String login(String email, String pwd, HttpServletRequest req){
@@ -50,8 +57,17 @@ public class UserController {
 	@RequestMapping(value="/logout")
 	public String register(HttpServletRequest req){
 		req.getSession().removeAttribute("user");
+		req.getSession().setAttribute("twitter", null);
+		req.getSession().setAttribute("query", null);
 		return "redirect:/index.jsp";
 	}
 	
-	
+	@RequestMapping(value="/mydownloads")
+	public String download(HttpServletRequest req){
+		User user = (User) req.getSession().getAttribute("user");
+		if(null==user) return "redirect:/index.jsp";
+		List<TrackingRecord> trs = tweetsService.getTrackingRecordsByUser(user);
+		req.setAttribute("records", trs);
+		return "mydownloads";
+	}
 }
