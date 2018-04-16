@@ -120,6 +120,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								</div>
 							</div>
 							<button type="button" id="search" class="btn btn-success">Search</button>
+							<button type="button" id="predict" class="btn btn-success">Predict</button>
 						</form>
 					</div>
 				</div>

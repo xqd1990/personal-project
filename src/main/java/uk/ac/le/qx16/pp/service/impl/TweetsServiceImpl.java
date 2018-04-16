@@ -57,4 +57,9 @@ public class TweetsServiceImpl implements TweetsService {
 		return trs;
 	}
 
+	@Override
+	public void deleteTrackingRecord(String path) {
+		// TODO Auto-generated method stub
+	}
+
 }

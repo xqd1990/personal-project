@@ -10,4 +10,5 @@ public interface TweetsService {
 	public void saveTweets(List<Tweet> tweets);
 	public void saveTrackingRecord(TrackingRecord tr);
 	public List<TrackingRecord> getTrackingRecordsByUser(User user);
+	public void deleteTrackingRecord(String path);
 }

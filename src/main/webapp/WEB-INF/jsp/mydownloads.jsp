@@ -33,7 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<tr>
 						<td>${status.index+1}</td>
 						<td><a href="track/${record.path}">${record.path}</a></td>
-						<td><button id="delete">delete</button><span class="sr-only">${record.path}</span></td>
+						<td><button id="delete" class="btn btn-default">delete</button><span class="sr-only">${record.path}</span></td>
 					</tr>
 					</c:forEach>
 				</tbody>

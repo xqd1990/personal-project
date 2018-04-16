@@ -49,7 +49,7 @@ public class TwitterController {
 	private static final Integer SEARCH_NUM_PER_PAGE =20;
 	private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final Integer ONE_HOUR_IN_MIL = 3600000;
-	
+	private static final String GENDER_API_KEY = "GAcQYTDaClzMGAzblq";
 	
 	@Autowired
 	private TweetsService tweetsService;
@@ -219,17 +219,17 @@ public class TwitterController {
 					tweet.setTwitterUser(new TwitterUser(status.getUser()));
 					tweets.add(tweet);
 				}
-				tweetsService.saveTweets(tweets);
-				uk.ac.le.qx16.pp.entities.User user = (uk.ac.le.qx16.pp.entities.User) session.getAttribute("user");
-				String path = user.getLastname()+"-"+new Date().toString()+".csv";
-				System.out.println("Start saving files to "+path);
 				try {
+					tweetsService.saveTweets(tweets);
+					uk.ac.le.qx16.pp.entities.User user = (uk.ac.le.qx16.pp.entities.User) session.getAttribute("user");
+					String path = user.getLastname()+"-"+new Date().toString().replaceAll(":", "-")+".csv";
+					System.out.println("Start saving files to "+path);
 					saveTweetsToFile(tweets, path);
 					TrackingRecord tr = new TrackingRecord();
 					tr.setPath(path);
 					tr.setUser(user);
 					tweetsService.saveTrackingRecord(tr);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -280,12 +280,17 @@ public class TwitterController {
 		try{
 			TwitterStream ts = (TwitterStream) session.getAttribute("ts");
 			ts.cleanUp();
-			return "Stopped";
+			return "Stop Successfully! Please go to download page for the file!";
 		}catch(Exception e){
 			return "Some Error Meet...";
 		}
 	}
 	
+	@RequestMapping(value="secret/predictGender")
+	public String predictGender(){
+		
+		return null;
+	}
 	/**
 	 * 
 	 * @param tweets the list of target tweets

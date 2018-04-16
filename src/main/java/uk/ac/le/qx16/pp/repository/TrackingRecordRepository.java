@@ -12,4 +12,6 @@ public interface TrackingRecordRepository extends JpaRepository<TrackingRecord, 
 	
 	@Query("select t from TrackingRecord t where t.user.id=:id")
 	public List<TrackingRecord> findByUserId(@Param("id") Integer userId);
+	
+	public TrackingRecord findByPath(String path);
 }

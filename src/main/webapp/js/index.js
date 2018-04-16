@@ -106,6 +106,9 @@ $(function(){
 			}
 		});
 	});
+	$("#predict").click(function(){
+		
+	});
 });
 function changeToHtml(data){
 	var content = "";
