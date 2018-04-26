@@ -1,10 +1,6 @@
 package uk.ac.le.qx16.pp.util;
 
-import org.bson.Document;
-
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.vdurmont.emoji.EmojiParser;
 
 import twitter4j.ConnectionLifeCycleListener;
 import twitter4j.FilterQuery;
@@ -34,7 +30,10 @@ public final class TwitterUtil {
 	private static final String ACCESS_TOKEN_SECRET = "TX9TneFiW1ehEJcr7maZ1Kp7tw4fF4wji4tu1GSVG5VVb";
 	private static final TwitterFactory tf = new TwitterFactory();
 	private static final TwitterStreamFactory tsf = new TwitterStreamFactory();
-	private static final MongoClient MONGOCLIENT = new MongoClient();
+	private static final String URL_REG = "((www\\.[\\s]+)|(https?://[^\\s]+))";
+	private static final String MENTION_REG = "@([^\\s]+)";
+	private static final String HASH_REG = "#([^\\s]+)";
+	private static final String START_WITH_NUMBER = "[1-9](\\s+)";
 	
 	/**
 	 * 
@@ -85,12 +84,18 @@ public final class TwitterUtil {
 	/**
 	 * 
 	 * @return return mongodb-twitter-database instance
-	 */
+	 *//*
 	public static MongoDatabase getDB(){
 		return MONGOCLIENT.getDatabase("twitter");
+	}*/
+	
+	
+	public static String filterTweet(String text){
+		text = EmojiParser.removeAllEmojis(text);
+		text = text.replaceAll(MENTION_REG, "").replaceAll(URL_REG, "").replaceAll(START_WITH_NUMBER, "").replaceAll(HASH_REG, "").replaceAll("RT ", "");
+		return text;
 	}
 	
-	static Status test_status;
 	public static void main(String[] args) throws TwitterException{
 		final TwitterStream ts = getLocalTwitterStream();
 		StatusListener statusListener = new StatusListener() {
@@ -107,10 +112,8 @@ public final class TwitterUtil {
 			
 			public void onStatus(Status arg0) {
 				// TODO Auto-generated method stub
-				System.out.println(arg0.getText());
-				test_status = arg0;
-				if(arg0.getText().contains("test"))
-					ts.cleanUp();
+				if(!"en".equals(arg0.getLang())) return;
+				System.out.println(filterTweet(arg0.getText()));
 				/*
 				MongoDatabase md = getDB();
 				MongoCollection<Document> col = md.getCollection("tweets");
@@ -147,38 +150,16 @@ public final class TwitterUtil {
 			
 			public void onDeletionNotice(StatusDeletionNotice arg0) {
 				// TODO Auto-generated method stub
-				System.out.println(arg0.toString());
 			}
 		};
 		
 		ts.addListener(statusListener);
-		FilterQuery query = new FilterQuery();
-		query.language(new String[] {"en"});
-		query.follow(new long[]{840574781737037827L});
+		//FilterQuery query = new FilterQuery();
+		//query.language(new String[] {"en"});
+		//query.follow(new long[]{840574781737037827L});
 		//query.track(new String[] {"#bitcoin"});
 		//query.count(3);
-		ts.addConnectionLifeCycleListener(new ConnectionLifeCycleListener() {
-			
-			@Override
-			public void onDisconnect() {
-				// TODO Auto-generated method stub
-				System.out.println("Disconnect");
-			}
-			
-			@Override
-			public void onConnect() {
-				// TODO Auto-generated method stub
-				System.out.println("Connect");
-			}
-			
-			@Override
-			public void onCleanUp() {
-				// TODO Auto-generated method stub
-				System.out.println(test_status.getUser().getScreenName());
-				System.out.println("Finished");
-			}
-		});
-		ts.filter(query);
+		ts.sample();
 		
 		/*Twitter twitter = getLocalTwitter();
 		//Query query = new Query().query("#test").lang("en");

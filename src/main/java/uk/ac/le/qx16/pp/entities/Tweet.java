@@ -72,4 +72,5 @@ public class Tweet {
 	public void setTwitterUser(TwitterUser twitterUser) {
 		this.twitterUser = twitterUser;
 	}
+
 }

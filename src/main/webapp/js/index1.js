@@ -107,7 +107,31 @@ $(function(){
 		});
 	});
 	$("#predict").click(function(){
-		
+		if(search_flag==0) return;
+		var params = {
+			keyword:$("#keyword").val(),
+			start:$("#start").val(),
+			end:$("#end").val()
+		};
+		$.ajax({
+			type:"post",
+			url:"tweets/predict",
+			data:params,
+			dataType:"json",
+			success:function(data){
+				google.charts.load('current', {'packages':['corechart']});
+				google.charts.setOnLoadCallback(function(){
+					var pie1data = google.visualization.arrayToDataTable([['Task','None'],['male',data.male],['female',data.female],['institute',data.totalNames-data.male-data.female]]);
+					var pie1options = {'title':'Gender Analysis'};
+					var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
+					chart1.draw(pie1data, pie1options);
+					var pie2data = google.visualization.arrayToDataTable([['Task','None'],['positive',data.positive],['negative',data.negative]]);
+					var pie2options = {'title':'Sentiment Analysis'};
+					var chart2 = new google.visualization.PieChart(document.getElementById('chart2'));
+					chart2.draw(pie2data, pie2options);
+				});
+			}
+		});
 	});
 });
 function changeToHtml(data){
