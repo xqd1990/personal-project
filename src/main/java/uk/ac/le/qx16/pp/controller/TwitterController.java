@@ -2,6 +2,7 @@ package uk.ac.le.qx16.pp.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,10 +10,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -310,11 +313,81 @@ public class TwitterController {
 		}
 	}
 	
+	private static final String USER_GENDER_URL = "https://api.textgain.com/1/gender?";
+	private static final String USER_SENTIMENT_URL = "https://api.textgain.com/1/sentiment?";
+	
 	@RequestMapping(value="predictPerson")
 	@ResponseBody
-	public PersonalPrediction predictPerson(){
-		
-		return null;
+	public PersonalPrediction predictPerson(String screenname, String name, HttpSession session){
+		System.out.println("Start to predict personal information according to screenname "+screenname+" and name "+name);
+		final String pname = name.split(" +")[0];
+		Twitter twitter = (Twitter) session.getAttribute("twitter");
+		List<Status> statuses = new ArrayList<Status>();
+		Paging paging = new Paging(1,10);
+		final List<Double> gender = Collections.synchronizedList(new ArrayList<Double>());
+		final List<Double> sentiment = Collections.synchronizedList(new ArrayList<Double>());
+		try{
+			while(statuses.size()<3){
+				List<Status> ss = twitter.getUserTimeline(screenname, paging);
+				if(null==ss||ss.size()==0) break;
+				for(Status status:ss){
+					if(!status.isRetweet()){
+						statuses.add(status);
+					}
+					if(statuses.size()==3) break;
+				}
+				paging.setPage(paging.getPage()+1);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		ExecutorService threadPool = Executors.newFixedThreadPool(3);
+		for(Status status:statuses){
+			final String text = TwitterUtil.filterTweet(status.getText());
+			System.out.println(text);
+			//thread to get 3 sentiment analysis result
+			threadPool.execute(new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					HttpURLConnection conn = null;
+					try {
+						String url1 = new StringBuffer(USER_SENTIMENT_URL).append("q=").append(URLEncoder.encode(text, "utf-8")).append("&lang=en").toString();
+						String url2 = new StringBuffer(USER_GENDER_URL).append("q=").append(URLEncoder.encode(text, "utf-8")).append("&by=").append(pname).append("&lang=en").toString();
+						conn = (HttpURLConnection) new URL(url1).openConnection();
+						BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+						JSONObject json = MyUtil.readerToJson(reader);
+						sentiment.add(json.getDouble("polarity")*json.getDouble("confidence"));
+						conn.disconnect();
+						conn = (HttpURLConnection) new URL(url2).openConnection();
+						reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+						json = MyUtil.readerToJson(reader);
+						if("m".equals(json.getString("gender"))){
+							gender.add(json.getDouble("confidence"));
+						}else{
+							gender.add(-1*json.getDouble("confidence"));
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(10, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		double g = 0;
+		double s = 0;
+		for(Double gen:gender) g+=gen;
+		for(Double sen:sentiment) s+=sen;
+		System.out.println(g+"--"+s);
+		PersonalPrediction pp = new PersonalPrediction(g,s/sentiment.size());
+		return pp;
 	}
 	
 	@RequestMapping(value="predict")
@@ -459,7 +532,7 @@ public class TwitterController {
 	 * 
 	 */
 	private static void saveTweetsToFile(List<Tweet> tweets, String filename) throws IOException{
-		FileWriter fw = new FileWriter(MyUtil.getCurrentPath()+"/track/"+filename);
+		FileWriter fw = new FileWriter(MyUtil.getCurrentPath()+File.separator+"track"+File.separator+filename);
 		CSVPrinter cp = new CSVPrinter(fw, CSVFormat.EXCEL);
 		List<String> record = new ArrayList<String>();
 		record.add("Tweet Id");
@@ -552,34 +625,12 @@ public class TwitterController {
 			result.append(line);
 		}
 		reader.close();
+		conn.disconnect();
 		return result.toString();
 	}
 	
 	public static void main(String[] args) throws Exception{
-		Documents documents = new Documents();
-		documents.add("1", "en", "Hello world. This is some input text that I love.");
-		documents.add("2", "en", "I really hate dogs!");
-		String text = new ObjectMapper().writeValueAsString(documents);
-		byte[] encoded = text.getBytes("UTF-8");
-		URL url = new URL(SENTIMENT_URL);
-		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "text/json");
-		conn.setRequestProperty("Ocp-Apim-Subscription-Key", SENTIMENT_KEY);
-		conn.setDoOutput(true);
-		
-		DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-		dos.write(encoded, 0, encoded.length);
-		dos.flush();
-		dos.close();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		StringBuffer result = new StringBuffer("");
-		String line = null;
-		while((line=reader.readLine())!=null){
-			result.append(line);
-		}
-		reader.close();
-		System.out.println(result.toString());
+		System.out.println(File.separator);
 	}
 }
 
@@ -689,20 +740,20 @@ class Documents{
 }
 
 class PersonalPrediction{
-	private Integer gender;
+	private Double gender;
 	private Double sentiment;
-	private TwitterUser twitterUser;
-	public PersonalPrediction(Integer gender, Double sentiment,
-			TwitterUser twitterUser) {
+	public PersonalPrediction(){
+		
+	}
+	public PersonalPrediction(Double gender, Double sentiment) {
 		super();
 		this.gender = gender;
 		this.sentiment = sentiment;
-		this.twitterUser = twitterUser;
 	}
-	public Integer getGender() {
+	public Double getGender() {
 		return gender;
 	}
-	public void setGender(Integer gender) {
+	public void setGender(Double gender) {
 		this.gender = gender;
 	}
 	public Double getSentiment() {
@@ -710,11 +761,5 @@ class PersonalPrediction{
 	}
 	public void setSentiment(Double sentiment) {
 		this.sentiment = sentiment;
-	}
-	public TwitterUser getTwitterUser() {
-		return twitterUser;
-	}
-	public void setTwitterUser(TwitterUser twitterUser) {
-		this.twitterUser = twitterUser;
 	}
 }

@@ -230,10 +230,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</div>
 			</div>
 		</div>
+		
+		<!-- predictPerson div -->
+		<div id="predictPerson" style="position:absolute;display:none;border:1px solid silver;background:#FFFFE1;">
+			
+		</div>
+		
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 		<script src="https://www.gstatic.com/charts/loader.js"></script> 
-		<script src="js/index1.js"></script>
+		<script src="js/index.js"></script>
 	</body>
 </html>

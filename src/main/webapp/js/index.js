@@ -1,4 +1,4 @@
-var model = "<tr><td><img src='forsrc' class='img-circle'><br><span>forscreenname</span></td><td>fortext</td><td>fortime</td><td>forretweeted</td><td>forfavorited</td></tr>"
+var model = "<tr><td><img src='forsrc' class='img-circle' onmouseover='predictPerson(this,event)' onmouseout='mouseout()'><span class='sr-only'>forUserId</span><span class='sr-only'>forUserName</span><br><span>forscreenname</span></td><td>fortext</td><td>fortime</td><td>forretweeted</td><td>forfavorited</td></tr>"
 $(function(){
 	$("#register").click(function(){
 		window.location.href="pages/register.html";
@@ -137,7 +137,35 @@ $(function(){
 function changeToHtml(data){
 	var content = "";
 	$.each(data,function(i,n){
-		content = content + model.replace("forsrc",n.twitterUser.profileImageUrlHttps).replace("forscreenname",n.twitterUser.screenname).replace("fortext",n.text).replace("fortime",n.createdAt).replace("forretweeted",n.retweetCount).replace("forfavorited",n.favouriteCount);
+		content = content + model.replace("forsrc",n.twitterUser.profileImageUrlHttps).replace("forUserId",n.twitterUser.id).replace("forUserName",n.twitterUser.name).replace("forscreenname",n.twitterUser.screenname).replace("fortext",n.text).replace("fortime",n.createdAt).replace("forretweeted",n.retweetCount).replace("forfavorited",n.favouriteCount);
 	});
 	return content;
+}
+function predictPerson(obj,e){
+	var id = $(obj).next().html();
+	var screenname = $(obj).next().next().next().next().html();
+	var name = $(obj).next().next().html();
+	var params = {"screenname":screenname,"name":name};
+	$("#predictPerson").html("predicting...");
+	$("#predictPerson").css("display","block");
+	$("#predictPerson").css("left",e.pageX);
+	$("#predictPerson").css("top",e.pageY);
+	$.ajax({
+		type:"post",
+		url:"tweets/predictPerson",
+		data:params,
+		dataType:"json",
+		success:function(data){
+			var content = "id:"+id+"<br>name:"+name+"<br>gender:";
+			if(data.gender>0) content+="male";
+			else content+="female";
+			if(data.sentiment>0.25) content+="<br>recent sentiment:positive";
+			else if(data.sentiment<-0.25) content+="<br>recent sentiment:positive";
+			else content+="<br>recent sentiment:neutral";
+			$("#predictPerson").html(content);
+		}
+	});
+}
+function mouseout(){
+	$("#predictPerson").css("display","none");
 }
