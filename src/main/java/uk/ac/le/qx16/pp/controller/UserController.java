@@ -70,4 +70,10 @@ public class UserController {
 		req.setAttribute("records", trs);
 		return "mydownloads";
 	}
+	
+	@RequestMapping(value="/deleteMydownloads")
+	public String deleteDownload(Integer id){
+		tweetsService.deleteTrackingRecord(id);
+		return "forward:/user/mydownloads";
+	}
 }

@@ -58,8 +58,10 @@ public class TweetsServiceImpl implements TweetsService {
 	}
 
 	@Override
-	public void deleteTrackingRecord(String path) {
+	@Transactional
+	public void deleteTrackingRecord(Integer id) {
 		// TODO Auto-generated method stub
+		trackingRecordRepository.delete(id);
 	}
 
 }

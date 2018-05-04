@@ -92,7 +92,7 @@ public final class TwitterUtil {
 	
 	public static String filterTweet(String text){
 		text = EmojiParser.removeAllEmojis(text);
-		text = text.replaceAll(MENTION_REG, "").replaceAll(URL_REG, "").replaceAll(START_WITH_NUMBER, "").replaceAll(HASH_REG, "").replaceAll("RT ", "");
+		text = text.replaceAll(MENTION_REG, "").replaceAll(URL_REG, "").replaceAll(START_WITH_NUMBER, "").replaceAll(HASH_REG, "").replaceAll("RT[\\s\\S]+", "");
 		return text;
 	}
 	

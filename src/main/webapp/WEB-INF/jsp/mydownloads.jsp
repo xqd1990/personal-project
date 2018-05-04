@@ -20,7 +20,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<body>
 		<div class="container" style="margin-top:30px">
 			<table class="table table-striped table-bordered col-sm-8">
-	  			<caption>Your List</caption>
+	  			<caption><a href="index.jsp">Back</a></caption>
 	  			<thead>
 				    <tr>
 				    	<th>No.</th>
@@ -33,7 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<tr>
 						<td>${status.index+1}</td>
 						<td><a href="track/${record.path}">${record.path}</a></td>
-						<td><button id="delete" class="btn btn-default">delete</button><span class="sr-only">${record.path}</span></td>
+						<td><button id="delete" class="btn btn-default">delete</button><span class="sr-only">${record.id}</span></td>
 					</tr>
 					</c:forEach>
 				</tbody>
@@ -44,7 +44,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-
+		<script>
+			$(function(){
+				$("#delete").click(function(){
+					var id = $(this).next().html();
+					window.location.href="user/deleteMydownloads?id="+id;
+				});
+			});
+		</script>
 	</body>
 </html>
 	

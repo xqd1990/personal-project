@@ -35,10 +35,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	<ul class="nav navbar-nav">
 			    		<li><a href="https://twitter.com">Twitter</a></li>
 			    		<li><a href="https://apps.twitter.com/">Dev</a></li>
+			    		<li><a href="http://twitter4j.org/oldjavadocs/4.0.4/index.html">Docs</a></li>
 			    		<li class="dropdown">
 			    			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">FQ <span class="caret"></span></a>
           					<ul class="dropdown-menu">
-          						<li><a href="#">About Us</a></li>
+          						<li><a href="pages/aboutus.pdf">About Us</a></li>
           						<li role="separator" class="divider"></li>
           						<li><a href="pages/getback.html">Forget Password</a></li>
           					</ul>

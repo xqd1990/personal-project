@@ -157,7 +157,7 @@ function predictPerson(obj,e){
 		dataType:"json",
 		success:function(data){
 			var content = "id:"+id+"<br>name:"+name+"<br>gender:";
-			if(data.gender>0) content+="male";
+			if(data.gender>0.25) content+="male";
 			else content+="female";
 			if(data.sentiment>0.25) content+="<br>recent sentiment:positive";
 			else if(data.sentiment<-0.25) content+="<br>recent sentiment:positive";

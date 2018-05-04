@@ -74,7 +74,9 @@ public class TwitterController {
 	private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final Integer ONE_HOUR_IN_MIL = 3600000;
 	private static final Pattern ENGLISH_NAME_PATTERN = Pattern.compile("^[a-zA-Z]*$");
-	private static final String GENDER_API_KEY = "RVnDlYyTBNAADbWqLn";
+	//GAcQYTDaClzMGAzblq
+	//RVnDlYyTBNAADbWqLn
+	private static final String GENDER_API_KEY = "GAcQYTDaClzMGAzblq";
 	private static final String SENTIMENT_URL = "https://westcentralus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment";
 	private static final String SENTIMENT_KEY = "54686f1a013b426190140f704517277f";
 	
@@ -316,6 +318,10 @@ public class TwitterController {
 	private static final String USER_GENDER_URL = "https://api.textgain.com/1/gender?";
 	private static final String USER_SENTIMENT_URL = "https://api.textgain.com/1/sentiment?";
 	
+	//m7lX9zdg91cT
+	private static final String UCLASSIFY_API_KEY = "enaWT80S2e4k";
+	private static final String UCLASSIFY_URL = "https://api.uclassify.com/v1/uclassify/genderanalyzer_v5/classify";
+	
 	@RequestMapping(value="predictPerson")
 	@ResponseBody
 	public PersonalPrediction predictPerson(String screenname, String name, HttpSession session){
@@ -323,7 +329,7 @@ public class TwitterController {
 		final String pname = name.split(" +")[0];
 		Twitter twitter = (Twitter) session.getAttribute("twitter");
 		List<Status> statuses = new ArrayList<Status>();
-		Paging paging = new Paging(1,10);
+		Paging paging = new Paging(1,30);
 		final List<Double> gender = Collections.synchronizedList(new ArrayList<Double>());
 		final List<Double> sentiment = Collections.synchronizedList(new ArrayList<Double>());
 		try{
@@ -386,7 +392,7 @@ public class TwitterController {
 		for(Double gen:gender) g+=gen;
 		for(Double sen:sentiment) s+=sen;
 		System.out.println(g+"--"+s);
-		PersonalPrediction pp = new PersonalPrediction(g,s/sentiment.size());
+		PersonalPrediction pp = new PersonalPrediction(g/gender.size(),s/sentiment.size());
 		return pp;
 	}
 	
@@ -423,6 +429,7 @@ public class TwitterController {
 			e.printStackTrace();
 		}
 		System.out.println("Totally get "+statuses.size()+" tweets...");
+		//use multiple threads
 		ExecutorService threadPool = Executors.newFixedThreadPool(10);
 		final Prediction prediction = new Prediction();
 		final Documents documents = new Documents();
@@ -473,7 +480,7 @@ public class TwitterController {
 				JSONArray array = json.getJSONArray("documents");
 				for(int i=0;i<array.length();i++){
 					JSONObject obj = array.getJSONObject(i);
-					if(obj.getDouble("score")>=0.5) positive++;
+					if(obj.getDouble("score")>=0.67) positive++;
 					else negative++;
 				}
 				prediction.addPositive(positive);
@@ -641,8 +648,7 @@ public class TwitterController {
 Key 1: 54686f1a013b426190140f704517277f
 
 Key 2: 44ff739c71844e6e8e955f0905dbdb49
-
-gender api key: ZLLsgKtsxkdCpZzaWz 
+ 
 */
 
 
