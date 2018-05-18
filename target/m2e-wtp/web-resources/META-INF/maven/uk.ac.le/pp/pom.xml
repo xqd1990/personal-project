@@ -17,30 +17,32 @@
   
   <dependencies>
   	
+  	<!-- javaMail -->
   	<dependency>
-    	<groupId>nz.ac.waikato.cms.weka</groupId>
-    	<artifactId>weka-dev</artifactId>
-    	<version>3.9.2</version>
+    	<groupId>javax.mail</groupId>
+    	<artifactId>mail</artifactId>
+    	<version>1.4</version>
+	</dependency>
+	<dependency>
+    	<groupId>javax.activation</groupId>
+    	<artifactId>activation</artifactId>
+    	<version>1.1.1</version>
 	</dependency>
   	
+  	<!-- the dependency for weka which applies logistic regression -->
+  	<dependency>
+    	<groupId>nz.ac.waikato.cms.weka</groupId>
+    	<artifactId>weka-stable</artifactId>
+    	<version>3.6.6</version>
+	</dependency>
+  	
+  	<!-- the dependency for removing the emojos -->
   	<dependency>
   		<groupId>com.vdurmont</groupId>
   		<artifactId>emoji-java</artifactId>
   		<version>4.0.0</version>
 	</dependency>
-  	<!-- 
-  	<dependency>
-		<groupId>edu.stanford.nlp</groupId>
-		<artifactId>stanford-corenlp</artifactId>
-		<version>3.7.0</version>
-	</dependency>
-	<dependency>  
-        <groupId>edu.stanford.nlp</groupId>  
-        <artifactId>stanford-corenlp</artifactId>  
-        <version>3.7.0</version>  
-        <classifier>models</classifier>  
-    </dependency>  
-	 -->
+  	
   	<dependency>
     	<groupId>org.apache.commons</groupId>
     	<artifactId>commons-csv</artifactId>
@@ -52,19 +54,13 @@
     	<artifactId>twitter4j-core</artifactId>
     	<version>4.0.3</version>
 	</dependency>
+	
 	<dependency>
 	    <groupId>org.twitter4j</groupId>
 	    <artifactId>twitter4j-stream</artifactId>
 	    <version>4.0.3</version>
 	</dependency>
 	
-	<!-- 
-	<dependency>
-        <groupId>org.mongodb</groupId>
-        <artifactId>mongodb-driver</artifactId>
-        <version>3.6.3</version>
-    </dependency>
-  	 -->
   	<!-- some dependencies about servlet -->
   	<dependency>
     	<groupId>javax.servlet</groupId>
@@ -113,14 +109,7 @@
 		<artifactId>hibernate-entitymanager</artifactId>
 		<version>4.2.1.Final</version>
 	</dependency>
-    
-    <!-- 
-    <dependency>
-    	<groupId>com.google.code.gson</groupId>
-    	<artifactId>gson</artifactId>
-    	<version>2.8.1</version>
-    </dependency>
-     -->
+
     <!-- json -->
 	<dependency>  
         <groupId>com.fasterxml.jackson.core</groupId>  

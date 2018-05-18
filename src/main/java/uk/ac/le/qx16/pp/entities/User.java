@@ -19,6 +19,20 @@ public class User {
 	private int id;
 	private String firstname;
 	private String lastname;
+	@Id@GeneratedValue
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	@Column(unique=true)
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	private List<TrackingRecord> trackingRecords;
 	@OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.REMOVE},mappedBy="user")
 	public List<TrackingRecord> getTrackingRecords() {
@@ -51,20 +65,7 @@ public class User {
 	private String postcode;
 	private String pwd;
 	private String tel;
-	@Id@GeneratedValue
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	@Column(unique=true)
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 	public int getGender() {
 		return gender;
 	}

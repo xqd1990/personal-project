@@ -2,13 +2,17 @@ package uk.ac.le.qx16.pp.controller;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -17,6 +21,7 @@ import uk.ac.le.qx16.pp.entities.User;
 import uk.ac.le.qx16.pp.repository.TrackingRecordRepository;
 import uk.ac.le.qx16.pp.service.TweetsService;
 import uk.ac.le.qx16.pp.service.UserService;
+import uk.ac.le.qx16.pp.util.MyUtil;
 
 @Controller
 @RequestMapping(value="/user")
@@ -71,9 +76,42 @@ public class UserController {
 		return "mydownloads";
 	}
 	
+	@RequestMapping(value="/mysettings")
+	public String mySettings(HttpSession session){
+		if(null==session.getAttribute("user")) return "forward:/index.jsp";
+		else return "mysettings";
+	}
+	
+	@RequestMapping(value="/update")
+	@ResponseBody
+	public String updateSettings(User user, HttpSession session){
+		try{
+			User u = userService.updateUser(user);
+			session.setAttribute("user", u);
+			return "Update Successfully";
+		}catch(Exception e){
+			return "Error: Update Error!";
+		}
+	}
+	
 	@RequestMapping(value="/deleteMydownloads")
 	public String deleteDownload(Integer id){
 		tweetsService.deleteTrackingRecord(id);
 		return "forward:/user/mydownloads";
+	}
+	
+	@RequestMapping(value="/getBack")
+	@ResponseBody
+	public String getBack(final String email){
+		User user = userService.checkEmail(email);
+		if(null==user) return "This email has not been signed up!";
+		final String pwd = user.getPwd();
+		try {
+			MyUtil.sentMail(email, pwd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return "System Failed, Please try again";
+		}
+		return "You will receive your password in ";
 	}
 }

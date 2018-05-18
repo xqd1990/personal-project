@@ -62,8 +62,10 @@ import uk.ac.le.qx16.pp.entities.TrackingRecord;
 import uk.ac.le.qx16.pp.entities.Tweet;
 import uk.ac.le.qx16.pp.entities.TwitterUser;
 import uk.ac.le.qx16.pp.service.TweetsService;
+import uk.ac.le.qx16.pp.util.DataTrain;
 import uk.ac.le.qx16.pp.util.MyUtil;
 import uk.ac.le.qx16.pp.util.TwitterUtil;
+import weka.core.Instance;
 
 @Controller
 @RequestMapping(value="/tweets")
@@ -315,10 +317,8 @@ public class TwitterController {
 		}
 	}
 	
-	private static final String USER_GENDER_URL = "https://api.textgain.com/1/gender?";
-	private static final String USER_SENTIMENT_URL = "https://api.textgain.com/1/sentiment?";
-	
 	//m7lX9zdg91cT
+	private static final String GENDER_URL = "https://gender-api.com/get?name=";
 	private static final String UCLASSIFY_API_KEY = "enaWT80S2e4k";
 	private static final String UCLASSIFY_URL = "https://api.uclassify.com/v1/uclassify/genderanalyzer_v5/classify";
 	
@@ -326,74 +326,134 @@ public class TwitterController {
 	@ResponseBody
 	public PersonalPrediction predictPerson(String screenname, String name, HttpSession session){
 		System.out.println("Start to predict personal information according to screenname "+screenname+" and name "+name);
-		final String pname = name.split(" +")[0];
+		final String firstname = name.split(" +")[0];
 		Twitter twitter = (Twitter) session.getAttribute("twitter");
-		List<Status> statuses = new ArrayList<Status>();
+		List<Status> statuses = null;
+		User user = null;
 		Paging paging = new Paging(1,30);
-		final List<Double> gender = Collections.synchronizedList(new ArrayList<Double>());
-		final List<Double> sentiment = Collections.synchronizedList(new ArrayList<Double>());
 		try{
-			while(statuses.size()<3){
-				List<Status> ss = twitter.getUserTimeline(screenname, paging);
-				if(null==ss||ss.size()==0) break;
-				for(Status status:ss){
-					if(!status.isRetweet()){
-						statuses.add(status);
-					}
-					if(statuses.size()==3) break;
-				}
-				paging.setPage(paging.getPage()+1);
-			}
+			statuses = twitter.getUserTimeline(screenname, paging);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		ExecutorService threadPool = Executors.newFixedThreadPool(3);
+		StringBuffer text_for_gender = new StringBuffer();
+		int count = 1;
+		Documents documents = new Documents();
 		for(Status status:statuses){
-			final String text = TwitterUtil.filterTweet(status.getText());
-			System.out.println(text);
-			//thread to get 3 sentiment analysis result
-			threadPool.execute(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					HttpURLConnection conn = null;
-					try {
-						String url1 = new StringBuffer(USER_SENTIMENT_URL).append("q=").append(URLEncoder.encode(text, "utf-8")).append("&lang=en").toString();
-						String url2 = new StringBuffer(USER_GENDER_URL).append("q=").append(URLEncoder.encode(text, "utf-8")).append("&by=").append(pname).append("&lang=en").toString();
-						conn = (HttpURLConnection) new URL(url1).openConnection();
-						BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-						JSONObject json = MyUtil.readerToJson(reader);
-						sentiment.add(json.getDouble("polarity")*json.getDouble("confidence"));
-						conn.disconnect();
-						conn = (HttpURLConnection) new URL(url2).openConnection();
-						reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-						json = MyUtil.readerToJson(reader);
-						if("m".equals(json.getString("gender"))){
-							gender.add(json.getDouble("confidence"));
-						}else{
-							gender.add(-1*json.getDouble("confidence"));
-						}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			});
+			if(null==user) user = status.getUser();
+			text_for_gender.append(TwitterUtil.filterAllTweet(status.getText()));
+			documents.add(count+"", "en", TwitterUtil.filterTweet(status.getText()));
+			count++;
 		}
-		threadPool.shutdown();
+		int favorite_count = user.getFavouritesCount();
+		int status_count = user.getStatusesCount();
+		int day = (int)((new Date().getTime()-user.getCreatedAt().getTime())/1000/60/60/24);
+		double status_per_day = 1.0*status_count/day;
+		double favorite_per_day = 1.0*favorite_count/day;
+		System.out.println("Status per day is "+status_per_day);
+		System.out.println("Favourite per day is "+favorite_per_day);
+		double name_predict = 0.5;
+		HttpURLConnection conn = null;
+		if(!MyUtil.judgeEmptyString(firstname)){
+			try{
+				URL url = new URL(GENDER_URL+firstname+"&key="+GENDER_API_KEY);
+				conn = (HttpURLConnection) url.openConnection();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				JSONTokener jt = new JSONTokener(reader);
+				JSONObject json = new JSONObject(jt);
+				double p = 1.0*json.getInt("accuracy")/100;
+				if("male".equals(json.getString("gender"))) name_predict = p;
+				else if("female".equals(json.getString("gender"))) name_predict = 1-p;
+				reader.close();
+			}catch(Exception e){
+				System.err.println("Something error when predicting gender according to firstname");
+			}finally{
+				conn.disconnect();
+			}
+		}
+		System.out.println("Name prediction is "+name_predict);
+		double text_predict = 0.5;
+		Texts texts = new Texts();
+		texts.addText(text_for_gender.toString());
+		try{
+			byte[] encoded = new ObjectMapper().writeValueAsString(texts).getBytes("UTF-8");
+			URL url = new URL(UCLASSIFY_URL);
+			conn = (HttpsURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "text/json");
+			conn.setRequestProperty("Authorization", "Token "+UCLASSIFY_API_KEY);
+			conn.setDoOutput(true);
+			DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+			dos.write(encoded, 0, encoded.length);
+			dos.flush();
+			dos.close();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			JSONTokener jt = new JSONTokener(reader);
+			JSONArray jarray = new JSONArray(jt);
+			JSONObject json = jarray.getJSONObject(0);
+			JSONArray array = json.getJSONArray("classification");
+			for(int i=0;i<array.length();i++){
+				JSONObject obj = array.getJSONObject(i);
+				if("male".equals(obj.getString("className"))){
+					text_predict = obj.getDouble("p");
+				}
+			}
+			reader.close();
+		}catch(Exception e){
+			System.err.println("no gender prediction for this record...");
+		}finally{
+			conn.disconnect();
+		}
+		System.out.println("Text prediction is "+text_predict);
+		Instance instance = new Instance(4);
+		instance.setDataset(DataTrain.DATASET);
+		instance.setValue(0, text_predict);
+		instance.setValue(1, name_predict);
+		instance.setValue(2, status_per_day);
+		instance.setValue(3, favorite_per_day);
+		double flag = 0.5;
 		try {
-			threadPool.awaitTermination(10, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
+			flag = DataTrain.GENDER_MODEL.distributionForInstance(instance)[0];
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println("Final Gender prediction is "+flag);
+		double sentiment = 0.5;
+		try {
+			String sentiment_result = sentimentAnalysis(documents);
+			int positive = 0;
+			int negative = 0;
+			JSONObject json = new JSONObject(sentiment_result);
+			JSONArray array = json.getJSONArray("documents");
+			for(int i=0;i<array.length();i++){
+				JSONObject obj = array.getJSONObject(i);
+				if(obj.getDouble("score")>=0.5) positive++;
+				else negative++;
+			}
+			sentiment = positive*1.0/(positive+negative);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		double g = 0;
-		double s = 0;
-		for(Double gen:gender) g+=gen;
-		for(Double sen:sentiment) s+=sen;
-		System.out.println(g+"--"+s);
-		PersonalPrediction pp = new PersonalPrediction(g/gender.size(),s/sentiment.size());
+		System.out.println("Sentiment prediction is "+sentiment);
+		PersonalPrediction pp = new PersonalPrediction(flag, sentiment);
 		return pp;
+	}
+	class Texts{
+		private List<String> texts = new ArrayList<String>();
+		
+		public List<String> getTexts() {
+			return texts;
+		}
+
+		public void setTexts(List<String> texts) {
+			this.texts = texts;
+		}
+		
+		public void addText(String text){
+			texts.add(text);
+		}
 	}
 	
 	@RequestMapping(value="predict")
@@ -437,15 +497,6 @@ public class TwitterController {
 		List<String> names = new ArrayList<String>();
 		for(Status status:statuses){
 			String tweet = TwitterUtil.filterTweet(status.getText());
-			/*threadPool.execute(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					int flag = sentiment(tweet);
-					if(flag>=0) prediction.addPositive(1);
-					else if(flag<0) prediction.addNegative(1);
-				}
-			});*/
 			documents.add(count+"", "en", tweet);
 			count++;
 			String name = status.getUser().getName().split(" +")[0];
@@ -586,31 +637,12 @@ public class TwitterController {
 		cp.close();
 	}
 	
-	/*private static int sentiment(String tweet){
-		int flag = 0;
-		tweet = TwitterUtil.filterTweet(tweet);
-		Document doc = new Document(tweet);
-		for(Sentence sentence:doc.sentences()){
-			switch (sentence.sentiment()) {
-				case VERY_POSITIVE:
-					flag+=2;
-					break;
-				case POSITIVE:
-					flag++;
-					break;
-				case NEGATIVE:
-					flag--;
-					break;
-				case VERY_NEGATIVE:
-					flag-=2;
-					break;
-				default:
-					break;
-			}
-		}
-		return flag;
-	}*/
-	
+	/**
+	 * 
+	 * @param documents 
+	 * @return the json string about result
+	 * @throws Exception
+	 */
 	private static String sentimentAnalysis(Documents documents) throws Exception{
 		String text = new ObjectMapper().writeValueAsString(documents);
 		byte[] encoded = text.getBytes("UTF-8");

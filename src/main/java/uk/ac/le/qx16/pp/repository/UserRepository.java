@@ -8,4 +8,5 @@ import uk.ac.le.qx16.pp.entities.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>{
 	public User findByEmailAndPwd(String email, String pwd);
+	public User findByEmail(String email);
 }

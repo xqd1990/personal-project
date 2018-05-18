@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- all the configurations below are all copied from my github page: https://github.com/xqd1990/statistic/blob/master/src/main/webapp/WEB-INF/web.xml -->
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  	<display-name>statistic</display-name>
+<!-- all the configurations below are all copied from my github page: 
+	https://github.com/xqd1990/statistic/blob/master/src/main/webapp/WEB-INF/web.xml
+ -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  	<display-name>personal project</display-name>  	
   	<welcome-file-list>
     	<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-	
+	<!-- listeners -->
 	<listener>
 		<listener-class>uk.ac.le.qx16.pp.util.MyUtil</listener-class>
 	</listener>
-	
+	<!-- filters -->
 	<filter>
        <filter-name>CharacterEncoding</filter-name>
        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -26,7 +29,7 @@
        <filter-name>CharacterEncoding</filter-name>
        <url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	<!-- servlets -->
 	<servlet>
 	  	<servlet-name>springmvc</servlet-name>
 	  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

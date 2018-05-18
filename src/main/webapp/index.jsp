@@ -138,14 +138,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<input type="text" class="form-control" name="keywords" placeholder="word1 word2 ..." id="keywords">
 								</div>
 							</div>
-							<!-- 
-							<div class="form-group">
-								<label for="hashtags" class="col-sm-2 control-label">Hashtags</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" name="hashtags" placeholder="hashtag1 hashtag2 ..." id="hashtags">
-								</div>
-							</div>
-							 -->
 							<div class="form-group">
 								<label for="sn" class="col-sm-2 control-label">Screenname</label>
 								<div class="col-sm-10">

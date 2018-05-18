@@ -80,22 +80,22 @@ public final class TwitterUtil {
 		ts.setOAuthConsumer(consumer_key, consumer_secret);
 		ts.setOAuthAccessToken(new AccessToken(access_token, access_token_secret));
 		return ts;
-	}
-	/**
-	 * 
-	 * @return return mongodb-twitter-database instance
-	 *//*
-	public static MongoDatabase getDB(){
-		return MONGOCLIENT.getDatabase("twitter");
-	}*/
-	
+	}	
 	
 	public static String filterTweet(String text){
+		text = EmojiParser.removeAllEmojis(text);
+		text = text.replaceAll(MENTION_REG, "").replaceAll(URL_REG, "").replaceAll(START_WITH_NUMBER, "").replaceAll(HASH_REG, "").replaceAll("RT ", "");
+		return text;
+	}
+	public static String filterAllTweet(String text){
 		text = EmojiParser.removeAllEmojis(text);
 		text = text.replaceAll(MENTION_REG, "").replaceAll(URL_REG, "").replaceAll(START_WITH_NUMBER, "").replaceAll(HASH_REG, "").replaceAll("RT[\\s\\S]+", "");
 		return text;
 	}
 	
+	
+	//the main method in this class is the process of learning
+	//the api of twitter4j
 	public static void main(String[] args) throws TwitterException{
 		final TwitterStream ts = getLocalTwitterStream();
 		StatusListener statusListener = new StatusListener() {

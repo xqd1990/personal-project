@@ -32,6 +32,14 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
+/*
+ * In this project, in order to predict gender of a twitter user, we collect 14,000 labelled data
+ * in the format of csv. However, we need to extract the information that we need and transform the
+ * csv file into arff file. We extract the text prediction, name prediction, tweet frequency and favorite
+ * frequency from the csv file. The file format transformation and the data training parts are in the
+ * DataTrain class. The accuracy about text prediction and name prediction is in the DataTest class.
+ * 
+ */
 public class DataFilter {
 	/*
 	 * "IVQBZF2wvJvmkujvCtUXfDYqV", "O5sX9sBX49yyBwjfP8bFww37CBp1l5Mzv5WczCIRSx1UsuXfb4"
@@ -70,15 +78,20 @@ public class DataFilter {
 		for(int count=1;count<=500;count++){
 			CSVRecord record = records.get(count);
 			String screenname = record.get(0).trim();
+			//Twitter user
 			User user = null;
+			//list of tweets under some conditions
 			List<Status> statuses = new ArrayList<Status>();
 			try {
+				//get page 1 and 30 tweets per page
 				Paging paging = new Paging(1,30);
 				statuses = twitter.getUserTimeline(screenname, paging);
 			} catch (TwitterException e) {
 			}
 			StringBuffer sb = new StringBuffer();
+			//loop ths statuses
 			for(Status status:statuses){
+				//get the user information from tweet
 				if(null==user) user = status.getUser();
 				sb.append(TwitterUtil.filterTweet(status.getText()));
 			}

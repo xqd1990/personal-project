@@ -1,4 +1,4 @@
-var model = "<tr><td><img src='forsrc' class='img-circle' onmouseover='predictPerson(this,event)' onmouseout='mouseout()'><span class='sr-only'>forUserId</span><span class='sr-only'>forUserName</span><br><span>forscreenname</span></td><td>fortext</td><td>fortime</td><td>forretweeted</td><td>forfavorited</td></tr>"
+var model = "<tr><td><img src='forsrc' class='img-circle' onclick='predictPerson(this,event)' onmouseout='mouseout()'><span class='sr-only'>forUserId</span><span class='sr-only'>forUserName</span><br><span>forscreenname</span></td><td>fortext</td><td>fortime</td><td>forretweeted</td><td>forfavorited</td></tr>"
 $(function(){
 	$("#register").click(function(){
 		window.location.href="pages/register.html";
@@ -121,7 +121,12 @@ $(function(){
 			success:function(data){
 				google.charts.load('current', {'packages':['corechart']});
 				google.charts.setOnLoadCallback(function(){
-					var pie1data = google.visualization.arrayToDataTable([['Task','None'],['male',data.male],['female',data.female],['institute',data.totalNames-data.male-data.female]]);
+					var pie1data = google.visualization.arrayToDataTable([
+					                      ['Task','None'],
+                                          ['male',data.male],
+                                          ['female',data.female],
+                                          ['institute',data.totalNames-data.male-data.female]
+					                      ]);
 					var pie1options = {'title':'Gender Analysis'};
 					var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
 					chart1.draw(pie1data, pie1options);
@@ -157,10 +162,11 @@ function predictPerson(obj,e){
 		dataType:"json",
 		success:function(data){
 			var content = "id:"+id+"<br>name:"+name+"<br>gender:";
-			if(data.gender>0.25) content+="male";
-			else content+="female";
-			if(data.sentiment>0.25) content+="<br>recent sentiment:positive";
-			else if(data.sentiment<-0.25) content+="<br>recent sentiment:positive";
+			if(data.gender>0.5) content+="male";
+			else if(data.gender<0.5) content+="female";
+			else content+="unknown";
+			if(data.sentiment>0.65) content+="<br>recent sentiment:positive";
+			else if(data.sentiment<0.35) content+="<br>recent sentiment:positive";
 			else content+="<br>recent sentiment:neutral";
 			$("#predictPerson").html(content);
 		}

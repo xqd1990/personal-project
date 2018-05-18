@@ -1,10 +1,79 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-ss
-</body>
+
+  	<head>
+  		<base href="http://localhost:8080/pp/">
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Forgotten Password</title>
+		<!-- below two are the css for bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	</head>
+	
+	<body>
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+			    <div class="navbar-header">
+			      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#links" aria-expanded="false">
+			        <span class="sr-only">Toggle navigation</span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			      </button>
+			      <a class="navbar-brand" href="index.jsp">Home</a>
+			    </div>
+			 </div>
+		</nav>
+		<div class="container" style="margin-top:50px">
+			<div class="form-group col-sm-6 col-sm-offset-2">
+				<label for="email" class="col-sm-4 control-label">Your register email</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" name="email" id="email">
+				</div>
+			</div>
+			<button class="btn btn-success" id="confirm">Confirm</button><br>
+			<div id="reminder" class="form-group col-sm-6 col-sm-offset-4" style="display:none">
+				<span id="content">You will receive email in <span id="second">60</span> seconds</span>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script>
+			var count;
+			var auto_count;
+			$(function(){
+				$("#confirm").click(function(){
+					var params = {
+							email:$("#email").val()
+						};
+					$.ajax({
+						url:"user/getBack",
+						type:"post",
+						data:params,
+						success:function(data){
+							if(!data.startsWith("You")){
+								alert(data);
+								return;
+							}
+							count = 60;
+							$("#reminder").css("display","block");
+							$("#confirm").prop("disabled",true);
+							auto_count = setInterval(secondFlow,1000);
+						}
+					});
+				});
+			});
+			function secondFlow(){
+				if(count==0){
+					$("#reminder").css("display","none");
+					$("#confirm").prop("disabled",false);
+					clearInterval(auto_count);
+					return;
+				}
+				count--;
+				$("#second").html(count);
+			}
+		</script>
+	</body>
 </html>
