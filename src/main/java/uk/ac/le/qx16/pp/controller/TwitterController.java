@@ -76,9 +76,8 @@ public class TwitterController {
 	private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final Integer ONE_HOUR_IN_MIL = 3600000;
 	private static final Pattern ENGLISH_NAME_PATTERN = Pattern.compile("^[a-zA-Z]*$");
-	//GAcQYTDaClzMGAzblq
-	//RVnDlYyTBNAADbWqLn
-	private static final String GENDER_API_KEY = "GAcQYTDaClzMGAzblq";
+	//CsCKSpeUJugBjJKkRX "GAcQYTDaClzMGAzblq"
+	private static final String GENDER_API_KEY = "CsCKSpeUJugBjJKkRX";
 	private static final String SENTIMENT_URL = "https://westcentralus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment";
 	private static final String SENTIMENT_KEY = "54686f1a013b426190140f704517277f";
 	

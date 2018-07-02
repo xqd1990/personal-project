@@ -60,7 +60,7 @@ public class DataTrain {
 		out.close();*/
 		
 		//below is to train a model and test the accuracy
-		String train_path = "src/main/resources/train800.arff";
+		String train_path = "src/main/resources/train1000.arff";
 		String test_path = "src/main/resources/test500.arff";
 		//labelled index
 		int train_class_index = 4;
@@ -76,7 +76,8 @@ public class DataTrain {
 		//this loop is to calculate the training accuracy
 		for(int i=0;i<train_total;i++){
 			Instance instance = instances.instance(i);
-			if((logistic.distributionForInstance(instance)[0]>0.5&&instance.classValue()==0)||(logistic.distributionForInstance(instance)[0]<=0.5&&instance.classValue()==1))
+			if((logistic.distributionForInstance(instance)[0]>0.5&&instance.classValue()==0)
+				||(logistic.distributionForInstance(instance)[0]<=0.5&&instance.classValue()==1))
 				train_right++;
 		}
 		System.out.println("Training Accuracy is "+1.0*train_right/train_total);
@@ -89,7 +90,8 @@ public class DataTrain {
 		//this loop is to calculate the testing accuracy
 		for(int i=0;i<total;i++){
 			Instance instance = instances.instance(i);
-			if((logistic.distributionForInstance(instance)[0]>0.5&&instance.classValue()==0)||(logistic.distributionForInstance(instance)[0]<=0.5&&instance.classValue()==1))
+			if((logistic.distributionForInstance(instance)[0]>0.5&&instance.classValue()==0)
+				||(logistic.distributionForInstance(instance)[0]<=0.5&&instance.classValue()==1))
 				right++;
 		}
 		System.out.println("Testing Accuracy is "+1.0*right/total);

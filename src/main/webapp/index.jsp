@@ -233,6 +233,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 		<script src="https://www.gstatic.com/charts/loader.js"></script> 
-		<script src="js/index.js"></script>
+		<script src="js/index1.js"></script>
 	</body>
 </html>

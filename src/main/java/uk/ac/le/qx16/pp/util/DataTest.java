@@ -52,7 +52,8 @@ public class DataTest {
 			if((text_predict<0.5&&"female".equals(result))||(text_predict>0.5&&"male".equals(result)))
 				text_correct++;
 		}
-		
+		//the name accuracy is 68.6%
+		//the text accuracy is 51.3%
 		System.out.println(name_correct*1.0/count+"--"+text_correct*1.0/count);
 	}
 	

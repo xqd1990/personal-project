@@ -124,8 +124,8 @@ $(function(){
 					var pie1data = google.visualization.arrayToDataTable([
 					                      ['Task','None'],
                                           ['male',data.male],
-                                          ['female',data.female],
-                                          ['institute',data.totalNames-data.male-data.female]
+                                          ['female',data.female]
+                                          //['institute',data.totalNames-data.male-data.female]
 					                      ]);
 					var pie1options = {'title':'Gender Analysis'};
 					var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
